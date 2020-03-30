@@ -35,7 +35,7 @@ const { getUserFromAzure } = require(`path/to/this/file`)
 
 */
 
-const { Request } = require(`tedious`)
+const { Request, TYPES } = require(`tedious`)
 const mssqldb = require(`../mssqldb`)
 
 /**
