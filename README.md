@@ -15,7 +15,9 @@ Request type: GET
 Retrieves logged in user from Azure in JSON format.
 Request type: GET
 Typical response body:
-`{
+
+```json
+{
   "Id": "e97bf212-e23f-4142-b76d-f40c31ff97c5",
   "UserName": "goldengeek14@gmail.com",
   "NormalizedUserName": "GOLDENGEEK14@GMAIL.COM",
@@ -31,7 +33,8 @@ Typical response body:
   "LockoutEnd": null,
   "LockoutEnabled": true,
   "AccessFailedCount": 0
-}`
+}
+```
 
 ### /items
 Requests data of collection items from internal Mongo database in JSON format.
