@@ -23,14 +23,15 @@ app.use(express.urlencoded({ extended: false })); // this line says that if ther
 app.use(cookieParser()); // This line says that if there are any cookies, that your app should store them in req.cookies
 
 // Here is where you should use the `express-session` middleware
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: hour }
 }));
-app.use(passport.initialize());
-app.use(passport.session());
+
 // Here is where you should assign your routers to specific routes. Make sure to authenticate() the routes that need authentication.
 app.use(`/api/v1/user`, authenticate, userRouter);
 app.use(`/api/v1/items`, authenticate, itemRouter);
