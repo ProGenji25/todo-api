@@ -11,7 +11,7 @@ const { getUserFromAzure } = require(`./util`);
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL
+    callbackURL: `${process.env.API_ORIGIN}${process.env.GOOGLE_CALLBACK_PATH}`
  },
  async (req, accessToken, refreshToken, profile, done) => {
     try {
@@ -42,4 +42,18 @@ passport.deserializeUser(async (user, done) => {
     }
   });
 
-module.exports = passport;
+// Session Init
+const initStore = session => {
+  const MongoDbStore = require(`connect-mongodb-session`)(session);
+  const store = new MongoDbStore({
+    uri: process.env.ATLAS_CONNECTION_STRING,
+    collection: `Sessions`,
+  }, err => {
+    if (err) console.error(err);
+    else console.log(`Session Store Initialized`);
+  })
+  store.on(`error`, console.error);
+  return store;
+}
+
+module.exports = initStore;

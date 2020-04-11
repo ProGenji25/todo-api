@@ -31,7 +31,7 @@ require(`dotenv`).config()
 * Module dependencies.
 */
 
-const app = require(`./src`)
+const app = require(`./app`)
 const http = require(`http`)
 
 /**

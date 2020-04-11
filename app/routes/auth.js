@@ -1,6 +1,12 @@
 const express = require(`express`);
 const router = express.Router();
 const passport = require('passport');
+const { authenticate } = require(`./util`);
+
+//GET /auth
+router.get(`/`, authenticate, (req, res) => {
+  res.send(req.user)
+})
 
 // GET /auth/google
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -16,10 +22,22 @@ router.get('/google',
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 router.get('/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.send("Logged in.");
-    //res.redirect('/');
+  //passport.authenticate('google', { failureRedirect: '/login' }),
+  async (req, res) => {
+    req.session.save(err => {
+      if (err) {
+        req.logout();
+        res.sendStatus(500);
+      }
+      else res.redirect(process.env.CLIENT_ORIGIN);
+    })
+  });
+
+// GET /auth/logout
+router.get(`/logout`, async (req,res) => {
+  req.session.destroy()
+  req.logout()
+  res.redirect(process.env.CLIENT_ORIGIN)
   });
 
 module.exports = router;
