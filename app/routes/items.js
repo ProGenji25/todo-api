@@ -41,8 +41,7 @@ router.post(`/`, async (req, res) => {
  */
 router.get(`/`, async (req, res) => {
 	try{
-		var result = await Item.find({ UserId: req.user.Id}).exec(); // filter by UserId so that they all equal req.user.Id
-		// mongoose Model.find() takes an object i.e. { UserId: req.user.Id }
+		var result = await Item.find({ UserId: req.user.Id}).exec();
 		res.status(200).send(result);
 	} catch (error) {
 		console.error(error);
