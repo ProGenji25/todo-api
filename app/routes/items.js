@@ -25,6 +25,9 @@ router.get(`/:id`, async (req, res) => {
 router.post(`/`, async (req, res) => {
 	try {
 		const item = new Item(req.body);
+		item.UserId = req.user.Id
+		if(!item.Text) throw Error("Missing text field.")
+		if(!item.Date) throw Error("Missing text field.")
 		var result = await item.save();
 		res.status(201).send(result);
 	} catch (error) {
@@ -38,7 +41,8 @@ router.post(`/`, async (req, res) => {
  */
 router.get(`/`, async (req, res) => {
 	try{
-		var result = await Item.find().exec();
+		var result = await Item.find({ UserId: req.user.Id}).exec(); // filter by UserId so that they all equal req.user.Id
+		// mongoose Model.find() takes an object i.e. { UserId: req.user.Id }
 		res.status(200).send(result);
 	} catch (error) {
 		console.error(error);
@@ -56,8 +60,11 @@ router.put(`/:id`, async (req, res) => {
 			res.status(404).send(`Item with ID ${req.params.id} does not exist.`)
 		}
 		else {
+			console.log(item)
 			item.set(req.body);
+			console.log(item)
 			var result = await item.save();
+			console.log(result)
 			res.status(200).send(result);
 		}
 	} catch (error) {
@@ -72,7 +79,13 @@ router.put(`/:id`, async (req, res) => {
 router.delete(`/:id`, async (req, res) => {
 	try{
 		var result = await Item.deleteOne({ _id: req.params.id }).exec();
+		if(result.deletedCount === 0) {
+			res.status(404).send(`Item with ID ${req.params.id} does not exist.`);
+		}
+		else {
+		console.log(result)
 		res.status(200).send(result);
+		}
 	} catch (error) {
 		console.error(error)
 		res.status(500).send(`Something went wrong.`)
